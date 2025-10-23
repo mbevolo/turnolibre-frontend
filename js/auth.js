@@ -1,21 +1,24 @@
 // ============================
-//  BASE de API (evita duplicados)
+//  BASE de API (calcular SIEMPRE)
 // ============================
-if (!window.__AUTH_BASE__) {
-  // 1) Si config.js definió API_BASE_URL (Vercel), usala
-  // 2) Si no hay, en local usar localhost:3000. En prod, usar Render.
+(function () {
+  const fromConfig = (typeof window.API_BASE_URL === 'string' && window.API_BASE_URL.trim())
+    ? window.API_BASE_URL.trim()
+    : null;
+
   const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname);
   const fallback = isLocal ? 'http://localhost:3000' : 'https://turnolibre.onrender.com';
 
-  window.__AUTH_BASE__ = (window.API_BASE_URL && String(window.API_BASE_URL)) || fallback;
-}
+  // Siempre volver a setear, sin if (!window.__AUTH_BASE__)
+  window.__AUTH_BASE__ = (fromConfig || fallback).replace(/\/+$/, '');
+  console.log('API BASE (auth.js) =>', window.__AUTH_BASE__);
+})();
 
 function apiUrl(path) {
   const base = window.__AUTH_BASE__.replace(/\/+$/, '');
   const p = String(path || '').startsWith('/') ? path : `/${path || ''}`;
   return base + p;
 }
-
 
 // ============================
 //  Helpers front
