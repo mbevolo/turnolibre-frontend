@@ -1,33 +1,32 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login</title>
 
-  <!-- Definí la URL del backend ANTES de cargar auth.js -->
-  <script>
-    // En producción, cambiá al dominio real
-    window.APP_BASE_URL = 'http://localhost:3000';
-  </script>
+  <!-- Carga la base de API (toma API_BASE_URL de Vercel o usa fallback) -->
   <script src="config.js"></script>
+  <!-- Lógica de auth: defer para que espere al DOM y a config.js -->
   <script src="js/auth.js" defer></script>
 </head>
 <body>
   <h1>Iniciar sesión</h1>
 
   <form id="form-login" novalidate>
-    <input type="email" id="email" placeholder="Correo electrónico" required><br>
-    <input type="password" id="password" placeholder="Contraseña" required><br>
+    <input type="email" id="email" placeholder="Correo electrónico" required><br />
+    <input type="password" id="password" placeholder="Contraseña" required><br />
     <button type="submit">Ingresar</button>
   </form>
-  <p>¿No tenés cuenta? <a href="registro.html">Registrate</a></p>
-<!-- BLOQUE REENVIAR VERIFICACIÓN (oculto por defecto) -->
-<div id="resend-block" style="display:none; margin-top:12px;">
-  <input type="email" id="resend-email" placeholder="Tu email para reenviar verificación" style="width:260px">
-  <button type="button" id="btn-resend">Reenviar verificación</button>
-  <small id="resend-msg" style="display:block;margin-top:6px;"></small>
-</div>
 
+  <p>¿No tenés cuenta? <a href="registro.html">Registrate</a></p>
+
+  <!-- BLOQUE REENVIAR VERIFICACIÓN (oculto por defecto) -->
+  <div id="resend-block" style="display:none; margin-top:12px;">
+    <input type="email" id="resend-email" placeholder="Tu email para reenviar verificación" style="width:260px" />
+    <button type="button" id="btn-resend">Reenviar verificación</button>
+    <small id="resend-msg" style="display:block;margin-top:6px;"></small>
+  </div>
 
   <!-- Banner de estado de verificación -->
   <div id="verify-banner" style="display:none; padding:12px; margin:12px 0; border-radius:6px;"></div>
@@ -38,26 +37,22 @@
       const params = new URLSearchParams(location.search);
       const verified = params.get('verified');
       const msg = params.get('msg');
-
       if (!verified && !msg) return;
 
       const banner = document.getElementById('verify-banner');
       const ok = verified === '1';
-
       banner.style.display = 'block';
       banner.style.background = ok ? '#e6ffed' : '#ffecec';
       banner.style.border = ok ? '1px solid #34c759' : '1px solid #ff3b30';
       banner.style.color = ok ? '#034d1a' : '#5a0000';
-
       banner.textContent = ok
         ? '¡Listo! Tu email fue verificado. Ya podés iniciar sesión.'
         : (decodeURIComponent(msg || '') || 'No se pudo verificar tu email.');
 
-      // Limpia la query
       const url = new URL(location.href);
       url.search = '';
       window.history.replaceState({}, '', url);
     })();
   </script>
-  </body>
+</body>
 </html>
