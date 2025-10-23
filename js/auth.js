@@ -2,14 +2,20 @@
 //  BASE de API (evita duplicados)
 // ============================
 if (!window.__AUTH_BASE__) {
-  // Cambiá window.APP_BASE_URL en el HTML si tu API no está en localhost:3000
-  window.__AUTH_BASE__ = (window.APP_BASE_URL && String(window.APP_BASE_URL)) || 'http://localhost:3000';
+  // 1) Si config.js definió API_BASE_URL (Vercel), usala
+  // 2) Si no hay, en local usar localhost:3000. En prod, usar Render.
+  const isLocal = ['localhost', '127.0.0.1'].includes(location.hostname);
+  const fallback = isLocal ? 'http://localhost:3000' : 'https://turnolibre.onrender.com';
+
+  window.__AUTH_BASE__ = (window.API_BASE_URL && String(window.API_BASE_URL)) || fallback;
 }
+
 function apiUrl(path) {
   const base = window.__AUTH_BASE__.replace(/\/+$/, '');
   const p = String(path || '').startsWith('/') ? path : `/${path || ''}`;
   return base + p;
 }
+
 
 // ============================
 //  Helpers front
