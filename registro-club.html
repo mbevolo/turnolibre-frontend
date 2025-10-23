@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro de Club</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { height: 300px; margin-top: 10px; }
+        input, select { margin-bottom: 8px; display: block; width: 100%; }
+    </style>
+</head>
+<body>
+    <h1>Registro para Clubes</h1>
+
+    <form id="form-registro-club">
+        <input type="text" id="nombre" placeholder="Nombre del club" required>
+        <input type="email" id="email" placeholder="Correo electrónico" required>
+        <input type="tel" id="telefono" placeholder="Teléfono" required>
+
+        <input type="password" id="password" placeholder="Contraseña" required>
+
+        <label for="provincia">Provincia:</label>
+        <select id="provincia" required>
+            <option value="">Seleccionar provincia</option>
+        </select>
+
+        <label for="localidad">Localidad:</label>
+        <select id="localidad" required disabled>
+            <option value="">Seleccionar localidad</option>
+        </select>
+
+        <input type="text" id="direccion" placeholder="Buscar dirección">
+        <button type="button" id="buscar">Buscar</button>
+
+        <div id="map"></div>
+
+        <input type="number" id="latitud" placeholder="Latitud" step="any" required readonly>
+        <input type="number" id="longitud" placeholder="Longitud" step="any" required readonly>
+
+        <button type="submit">Registrarse</button>
+    </form>
+
+    <p>¿Ya tenés cuenta? <a href="login-club.html">Iniciar sesión</a></p>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script>
+        const map = L.map('map').setView([-34.6037, -58.3816], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker;
+        map.on('click', function(e) {
+            const { lat, lng } = e.latlng;
+            if (marker) {
+                marker.setLatLng(e.latlng);
+            } else {
+                marker = L.marker(e.latlng).addTo(map);
+            }
+            document.getElementById('latitud').value = lat.toFixed(6);
+            document.getElementById('longitud').value = lng.toFixed(6);
+        });
+
+        document.getElementById('buscar').addEventListener('click', function() {
+            const direccion = document.getElementById('direccion').value;
+            if (!direccion) {
+                alert('Por favor ingresa una dirección.');
+                return;
+            }
+
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(direccion)}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const { lat, lon } = data[0];
+                        const latNum = parseFloat(lat);
+                        const lonNum = parseFloat(lon);
+
+                        map.setView([latNum, lonNum], 15);
+                        if (marker) {
+                            marker.setLatLng([latNum, lonNum]);
+                        } else {
+                            marker = L.marker([latNum, lonNum]).addTo(map);
+                        }
+
+                        document.getElementById('latitud').value = latNum.toFixed(6);
+                        document.getElementById('longitud').value = lonNum.toFixed(6);
+                    } else {
+                        alert('Dirección no encontrada.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error al buscar dirección:', error);
+                    alert('Error al buscar la dirección.');
+                });
+        });
+
+        async function cargarUbicaciones() {
+            try {
+                const res = await fetch('http://localhost:3000/ubicaciones');
+                const data = await res.json();
+
+                const selectProvincia = document.getElementById('provincia');
+                const selectLocalidad = document.getElementById('localidad');
+
+                Object.keys(data).forEach(prov => {
+                    const opt = document.createElement('option');
+                    opt.value = prov;
+                    opt.textContent = prov;
+                    selectProvincia.appendChild(opt);
+                });
+
+                selectProvincia.addEventListener('change', () => {
+                    const provincia = selectProvincia.value;
+                    selectLocalidad.innerHTML = '<option value="">Seleccionar localidad</option>';
+                    if (data[provincia]) {
+                        data[provincia].forEach(loc => {
+                            const opt = document.createElement('option');
+                            opt.value = loc;
+                            opt.textContent = loc;
+                            selectLocalidad.appendChild(opt);
+                        });
+                        selectLocalidad.disabled = false;
+                    } else {
+                        selectLocalidad.disabled = true;
+                    }
+                });
+            } catch (err) {
+                console.error('Error cargando ubicaciones:', err);
+                alert('No se pudieron cargar las provincias.');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', cargarUbicaciones);
+
+       
+    </script>
+    <script>
+document.getElementById('form-registro-club').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const nombre = document.getElementById('nombre').value.trim();
+    const email = document.getElementById('email').value.trim();
+    const password = document.getElementById('password').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+    const direccion = document.getElementById('direccion').value.trim();
+    const latitud = document.getElementById('latitud').value.trim();
+    const longitud = document.getElementById('longitud').value.trim();
+    const provincia = document.getElementById('provincia').value.trim();
+    const localidad = document.getElementById('localidad').value.trim();
+
+    if (!nombre || !email || !password || !telefono || !direccion || !latitud || !longitud || !provincia || !localidad) {
+        alert('Por favor completá todos los campos y ubicá el club en el mapa.');
+        return;
+    }
+
+    const clubData = {
+        nombre,
+        email,
+        password,
+        telefono,
+        direccion,
+        latitud,
+        longitud,
+        provincia,
+        localidad
+    };
+
+    try {
+        const res = await fetch('http://localhost:3000/registro-club', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(clubData)
+        });
+
+        const data = await res.json();
+
+        if (res.ok) {
+            alert('Club registrado con éxito');
+            window.location.href = 'login-club.html';
+        } else {
+            if (data.error === 'El club ya está registrado') {
+                alert('Ya existe un club registrado con este correo electrónico.');
+            } else {
+                alert(data.error || 'Error al registrar club');
+            }
+        }
+    } catch (err) {
+        console.error('❌ Error al registrar club:', err);
+        alert('Error al registrar club');
+    }
+});
+</script>
+
+
+</body>
+</html>

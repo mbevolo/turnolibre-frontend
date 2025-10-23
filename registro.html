@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro</title>
+</head>
+<body>
+    <h1>Registro</h1>
+    <form id="form-registro">
+        <input type="text" id="nombre" placeholder="Nombre" required><br>
+        <input type="text" id="apellido" placeholder="Apellido" required><br>
+        <input type="tel" id="telefono" placeholder="Teléfono (ej. +5491123456789)" pattern="^\+?[1-9]\d{1,14}$" required><br>
+        <input type="email" id="email" placeholder="Correo electrónico" required><br>
+        <input type="password" id="password" placeholder="Contraseña" required><br>
+        <button type="submit">Registrarse</button>
+    </form>
+    <p>¿Ya tenés cuenta? <a href="login.html">Iniciar sesión</a></p>
+
+    <script src="js/auth.js"></script>
+</body>
+</html>
