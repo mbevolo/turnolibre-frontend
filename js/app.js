@@ -42,7 +42,7 @@ function normalizarTexto(texto) {
 
 async function obtenerClubes() {
   try {
-    const res = await fetch('http://localhost:3000/clubes');
+    const res = await fetch(`${window.API_BASE_URL}/clubes`);
     if (!res.ok) throw new Error('Respuesta no OK al obtener clubes');
     return await res.json();
   } catch (e) {
@@ -72,7 +72,7 @@ async function cargarUbicaciones() {
   if (!provinciaSelect || !localidadSelect) return; // la página no tiene filtros de ubicación
 
   try {
-    const res = await fetch('http://localhost:3000/ubicaciones');
+    const res = await fetch(`${window.API_BASE_URL}/ubicaciones`);
     const data = await res.json();
 
     provinciaSelect.innerHTML = '<option value="">Todas</option>';
@@ -399,7 +399,7 @@ window.addEventListener('DOMContentLoaded', () => {
           const metodoPago = document.getElementById('metodo-pago')?.value || 'club';
 
           try {
-            const respuesta = await fetch('http://localhost:3000/reservar-turno', {
+            const respuesta = await fetch(`${window.API_BASE_URL}/reservar-turno`, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({

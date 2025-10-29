@@ -1,3 +1,23 @@
+// ===============================
+// Validación de sesión del club
+// ===============================
+document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('clubToken');
+  const email = localStorage.getItem('clubEmail');
+
+  console.log('Verificando sesión del club:', { token, email });
+
+  if (!token || !email) {
+    alert('Debes iniciar sesión como club.');
+    window.location.href = 'login-club.html';
+    return;
+  }
+
+  // Guardar globalmente si lo necesitás
+  window.clubToken = token;
+  window.clubEmail = email;
+});
+
 // ====== Configuración dinámica de precio y plazo de destaque ======
 let PRECIO_DESTACADO = 4999;
 let DIAS_DESTACADO = 30;
@@ -18,18 +38,21 @@ async function cargarConfigDestacado() {
 document.addEventListener('DOMContentLoaded', async () => {
     await cargarConfigDestacado();
 
-    const nombreClub = localStorage.getItem('clubNombre');
+    // ==========================
+    // 🔐 Verificación de sesión
+    // ==========================
     const clubEmail = localStorage.getItem('clubEmail');
+    const token = localStorage.getItem('clubToken');
     let editandoCanchaId = null;
     let clubData = null;
 
-    await renderBloqueDestacar();
-
-    if (!nombreClub || !clubEmail) {
+    if (!clubEmail || !token || token === 'null' || token === 'undefined') {
         alert('Debes iniciar sesión como club.');
         window.location.href = 'login-club.html';
         return;
     }
+
+    console.log(`✅ Sesión válida: ${clubEmail}`);
     try {
         const resClub = await fetch(`http://localhost:3000/club/${clubEmail}`);
         clubData = await resClub.json();
