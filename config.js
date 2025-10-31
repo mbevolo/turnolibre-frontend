@@ -1,15 +1,19 @@
 /* turnolibre-web/config.js */
 (function () {
-  // Detecta si corre en localhost; si no, usa el dominio que definas
-  const isLocal = /^(localhost|127\.0\.0\.1)/.test(location.hostname);
+  // Detecta entorno
+  const hostname = window.location.hostname;
+  const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
 
-  // ⚠️ Cambiá SOLO esta línea cuando subas a producción:
-  const PROD_API = 'https://turnolibre.onrender.com';
+  // ✅ URL del backend en producción (Render)
+  const PROD_API = 'https://turnolibre-backend.onrender.com'; // <-- reemplazá con tu dominio real
 
+  // Selecciona el backend correcto
   window.API_BASE_URL = isLocal
     ? 'http://localhost:3000'
     : PROD_API;
 
-  // Atajo opcional (para escribir menos en tus JS)
+  // Atajo opcional
   window.API = window.API_BASE_URL;
+
+  console.log('🌍 API_BASE_URL:', window.API_BASE_URL);
 })();
