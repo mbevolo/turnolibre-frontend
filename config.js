@@ -5,7 +5,7 @@
   const isLocal = hostname === 'localhost' || hostname === '127.0.0.1';
 
   // ✅ URL del backend en producción (Render)
-  const PROD_API = 'https://turnolibre-backend.onrender.com'; // <-- reemplazá con tu dominio real
+  const PROD_API = 'https://turnolibre.onrender.com'; // <-- reemplazá con tu dominio real
 
   // Selecciona el backend correcto
   window.API_BASE_URL = isLocal
