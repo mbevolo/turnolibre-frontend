@@ -4,7 +4,7 @@
   const isLocal = /^(localhost|127\.0\.0\.1)/.test(location.hostname);
 
   // ⚠️ Cambiá SOLO esta línea cuando subas a producción:
-  const PROD_API = 'https://TU-BACKEND.onrender.com';
+  const PROD_API = 'https://turnolibre.onrender.com';
 
   window.API_BASE_URL = isLocal
     ? 'http://localhost:3000'
