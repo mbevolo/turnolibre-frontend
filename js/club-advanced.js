@@ -482,16 +482,20 @@ async function cargarAgendas() {
                                     // Obtener reserva con teléfono
                                     const resReserva = await fetch(`https://turnolibre-backend.onrender.com/reserva/${turno.realId}`);
                                     const reserva = await resReserva.json();
-                                    let telefonoOriginal = reserva.usuarioId?.telefono || '';
+                             
+                                    let telefonoOriginal =
+                                    reserva.usuarioId?.telefono ||
+                                    reserva.usuarioTelefono ||
+                                    reserva.telefonoReservado ||
+                                    '';
                                     let telefono = telefonoOriginal.replace(/[^0-9]/g, '');
-                                    // console.log('📞 Teléfono desde usuarioId:', telefono);
                                     if (!telefono) {
-                                            alert('El usuario no tiene un número válido en su perfil.');
-                                            return;
+                                        alert('El usuario no tiene un número válido en su perfil.');
+                                        return;
                                     }
-
                                     if (telefono.startsWith('0')) telefono = telefono.slice(1);
                                     if (!telefono.startsWith('549')) telefono = '549' + telefono;
+
                                     const nombreClub = clubData?.nombre || reserva.club;
                                     const [anio, mes, dia] = reserva.fecha.split('-');
                                     const fechaFormateada = `${dia}/${mes}/${anio}`;
@@ -942,15 +946,22 @@ const res = await fetch('https://turnolibre-backend.onrender.com/reservar-turno'
                   }
                   const resReserva = await fetch(`https://turnolibre-backend.onrender.com/reserva/${id}`);
                   const reserva = await resReserva.json();
-                  let telefonoOriginal = reserva.usuarioId?.telefono || '';
-                  let telefono = telefonoOriginal.replace(/[^0-9]/g, '');
-                  // console.log('📞 Teléfono desde usuarioId:', telefono);
-                  if (!telefono) {
-                        alert('El usuario no tiene un número válido en su perfil.');
-                        return;
-                  }
-                  if (telefono.startsWith('0')) telefono = telefono.slice(1);
-                  if (!telefono.startsWith('549')) telefono = '549' + telefono;
+                  let telefonoOriginal =
+    reserva.usuarioId?.telefono ||
+    reserva.usuarioTelefono ||
+    reserva.telefonoReservado ||
+    '';
+
+let telefono = telefonoOriginal.replace(/[^0-9]/g, '');
+
+if (!telefono) {
+    alert('El usuario no tiene un número válido en su perfil.');
+    return;
+}
+
+if (telefono.startsWith('0')) telefono = telefono.slice(1);
+if (!telefono.startsWith('549')) telefono = '549' + telefono;
+
                   const nombreClub = clubData?.nombre || reserva.club;
                   const [anio, mes, dia] = reserva.fecha.includes('-') ? reserva.fecha.split('-') : [reserva.fecha.split('/')[2], reserva.fecha.split('/')[1], reserva.fecha.split('/')[0]];
                   const fechaFormateada = `${dia}/${mes}/${anio}`;
