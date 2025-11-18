@@ -348,15 +348,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else if (t.usuarioReservado) {
                 color = 'red'; // Reservado futuro
             }
-return {
-    title: t.usuarioReservado ? `Reservado: ${t.usuarioReservado}` : `Libre`,
-    start: `${t.fecha}T${t.hora}`,
-    color: color,
-    classNames: [`calendar-color-${color.replace('#','')}`],
-    id: t.realId,
-    extendedProps: { ...t, customColor: color }
-};
-
+            return {
+                title: t.usuarioReservado ? `Reservado: ${t.usuarioReservado}` : `Libre`,
+                start: `${t.fecha}T${t.hora}`,
+                color: color,
+                id: t.realId,
+                extendedProps: t
+            };
         });
 
         // Actualizá los eventos del calendario único
@@ -367,21 +365,14 @@ return {
         }
     }
 
-async function cargarAgendas() {
-
-    // Selector arriba
-    const selectorContainer = document.getElementById("selector-cancha");
-    selectorContainer.innerHTML = `
-        <select id="select-cancha-agenda" class="form-select"></select>
-    `;
-
-    // Calendario ocupa todo el ancho
-    const agendasContainer = document.getElementById('agendas-container');
-    agendasContainer.innerHTML = `
-        <div id="calendar-unico"></div>
-    `;
-
-    const selectCancha = document.getElementById('select-cancha-agenda');
+    async function cargarAgendas() {
+        const agendasContainer = document.getElementById('agendas-container');
+        agendasContainer.innerHTML = `
+            <label for="select-cancha-agenda" class="form-label mt-2 mb-1">Seleccioná la cancha:</label>
+            <select id="select-cancha-agenda" class="form-select mb-3"></select>
+            <div id="calendar-unico"></div>
+        `;
+        const selectCancha = document.getElementById('select-cancha-agenda');
 
         // Trae todas las canchas y carga el select
         const resCanchas = await fetch(`https://turnolibre-backend.onrender.com/canchas/${clubEmail}`);
