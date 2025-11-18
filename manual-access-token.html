@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>¿Cómo obtener mi Access Token de MercadoPago?</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 30px auto; padding: 30px; background: #fafcff; border-radius: 16px; }
+    h1 { color: #2e5bac; margin-bottom: 24px; }
+    ol { margin-left: 1.2em; }
+    .advertencia { background: #ffe3e3; color: #b40000; padding: 14px 18px; border-radius: 10px; margin: 18px 0 28px 0; border-left: 6px solid #e23; }
+    a { color: #2975d1; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code { background: #f5f5f5; padding: 2px 5px; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>¿Cómo obtener mi Access Token de MercadoPago?</h1>
+  
+  <div class="advertencia">
+    <b>⚠️ Importante: Seguridad del Access Token</b><br>
+    - <b>No compartas tu Access Token</b> por WhatsApp, email ni redes sociales.<br>
+    - El Access Token permite operar con tu cuenta y cobrar reservas.<br>
+    - Guardalo solo en el panel de TurnoLibre.<br>
+    - Si creés que alguien obtuvo tu Access Token, <b>eliminá la aplicación y generá uno nuevo</b> desde MercadoPago.<br>
+  </div>
+  
+  <ol>
+    <li>Ingresá a <a href="https://www.mercadopago.com.ar" target="_blank">www.mercadopago.com.ar</a> y <b>iniciá sesión</b> con la cuenta de tu club.</li>
+    <li>En el menú izquierdo, hacé click en <b>Configuración</b> y luego en <b>Integraciones</b>.</li>
+    <li>Entrá en <b>Credenciales</b> y hacé click en <b>Crear aplicación</b>.</li>
+    <li>Colocá un nombre para la aplicación, por ejemplo: <code>TurnoLibre</code>, y guardá.</li>
+    <li>Entrá en la aplicación recién creada y buscá el campo que dice <b>Access Token</b> (Producción).</li>
+    <li>Copiá el Access Token de <b>Producción</b> (¡no el de prueba!).</li>
+    <li>Volvé a TurnoLibre, entrá en la pestaña <b>Información del Club</b> y pegá el Access Token en el campo correspondiente.</li>
+    <li>Guardá los cambios.</li>
+  </ol>
+  
+  <b>Link directo para tus aplicaciones:</b>  
+  <a href="https://www.mercadopago.com.ar/developer/applications" target="_blank">
+    https://www.mercadopago.com.ar/developer/applications
+  </a>
+  
+  <br><br>
+  <div>
+    <b>¿No ves alguna opción?</b> MercadoPago puede actualizar los menús. Si no encontrás “Integraciones” o “Credenciales”, buscá en la barra superior o consultá al soporte de MercadoPago y pedí habilitar las credenciales API para tu cuenta.
+  </div>
+  <script src="js/footer.js"></script>
+
+</body>
+</html>

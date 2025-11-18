@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restablecer contraseña - TurnoLibre</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card shadow">
+          <div class="card-body">
+            <h3 class="text-center mb-4">Restablecer contraseña</h3>
+            <p class="text-muted text-center">Ingresá tu nueva contraseña.</p>
+
+            <form id="formReset">
+              <div class="mb-3">
+                <label for="password" class="form-label">Nueva contraseña</label>
+                <input type="password" id="password" class="form-control" minlength="6"
+                  pattern="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*?&]{6,}$"
+                  title="Debe tener al menos 6 caracteres, incluyendo una letra y un número"
+                  placeholder="••••••••" required>
+              </div>
+
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Actualizar contraseña</button>
+              </div>
+            </form>
+
+            <div id="mensaje" class="mt-3 text-center"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Obtener token y tipo desde la URL
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get('token');
+    const tipo = params.get('tipo'); // 'usuario' o 'club'
+
+    document.getElementById('formReset').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const nuevaPassword = document.getElementById('password').value.trim();
+      const mensajeDiv = document.getElementById('mensaje');
+      mensajeDiv.textContent = 'Procesando...';
+
+      if (!token) {
+        mensajeDiv.innerHTML = '<span class="text-danger">Token inválido o faltante.</span>';
+        return;
+      }
+
+      try {
+        const endpoint = tipo === 'club' ? '/reset-club' : '/reset';
+        const res = await fetch('https://turnolibre-backend.onrender.com' + endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token, nuevaPassword })
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          mensajeDiv.innerHTML = `<span class="text-success">${data.mensaje}</span>`;
+          setTimeout(() => {
+            window.location.href = tipo === 'club' ? 'login-club.html' : 'login.html';
+          }, 2000);
+        } else {
+          mensajeDiv.innerHTML = `<span class="text-danger">${data.error || 'Error al restablecer la contraseña.'}</span>`;
+        }
+      } catch (error) {
+        mensajeDiv.innerHTML = `<span class="text-danger">Error de conexión.</span>`;
+      }
+    });
+  </script>
+  <script src="js/footer.js"></script>
+
+</body>
+</html>

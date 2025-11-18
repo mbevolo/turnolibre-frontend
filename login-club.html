@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Login Club</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <h1>Acceso de Club</h1>
+
+    <form id="form-login-club">
+        <input type="email" id="email" placeholder="Correo electrónico" required><br>
+        <input type="password" id="password" placeholder="Contraseña" required><br>
+        <button type="submit">Iniciar sesión</button>
+    </form>
+<div class="text-center mt-3">
+  <a href="recuperar.html">¿Olvidaste tu contraseña?</a>
+</div>
+
+    <p>¿Todavía no estás registrado? <a href="registro-club.html">Registrate</a></p>
+
+    <!-- IMPORTANTE: aquí va el script -->
+    <script src="js/login-club.js"></script>
+
+<script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const verified = params.get('verified');
+
+    if (verified === '1') {
+      const div = document.createElement('div');
+      div.className = 'alert alert-success text-center mt-3';
+      div.innerHTML = '✅ Tu cuenta fue verificada correctamente. Ya podés iniciar sesión.';
+      document.body.prepend(div);
+    }
+  });
+</script>
+<script src="js/footer.js"></script>
+
+</body>
+</html>

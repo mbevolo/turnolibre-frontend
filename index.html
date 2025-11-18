@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TurnoLibre - Reserva tu cancha</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+    <div id="barra-usuario" style="display: flex; justify-content: space-between; padding: 10px; background-color: #eee;">
+        <span id="usuario-logueado"></span>
+        <button id="logout" style="display:none;">Cerrar sesión</button>
+    </div>
+
+    <header>
+        <h1>
+            <svg width="40" height="40" viewBox="0 0 100 100" style="vertical-align: middle; margin-right: 10px;">
+              <circle cx="50" cy="50" r="48" fill="#007bff" stroke="white" stroke-width="4"/>
+              <text x="50%" y="55%" text-anchor="middle" fill="white" font-size="32" font-family="Arial" dy=".3em">TL</text>
+            </svg>
+            TurnoLibre
+        </h1>
+        <p>Encontrá tu cancha disponible en segundos</p>
+    </header>
+
+    <main>
+        <section class="buscador">
+            <h2>Buscador de Turnos</h2>
+            <form id="formulario-busqueda">
+
+                <label for="deporte">Deporte:</label>
+                <select id="deporte" required>
+                    <option value="">Seleccionar</option>
+                    <option value="futbol">Fútbol</option>
+                    <option value="padel">Pádel</option>
+                    <option value="tenis">Tenis</option>
+                </select>
+
+<label for="provincia" style="display:flex; align-items:center; gap:8px;">
+    Provincia:
+    <button type="button" id="usar-ubicacion" style="margin-left:10px; font-size:0.8em;">📍 Usar mi ubicación</button>
+</label>
+
+<select id="provincia">
+    <option value="">Todas</option>
+</select>
+
+                    <option value="">Todas</option>
+                    <!-- Se carga desde app.js -->
+                </select>
+
+                <label for="localidad">Localidad:</label>
+                <select id="localidad" disabled>
+                    <option value="">Todas</option>
+                </select>
+                <label for="club">Club:</label>
+                <select id="club">
+                    <option value="">Todos los clubes</option>
+                </select>
+
+
+                <label for="fecha">Fecha:</label>
+                <input type="date" id="fecha" required>
+
+                <label for="hora">Hora:</label>
+                <select id="hora">
+                    <option value="">Cualquier hora</option>
+                    <option value="08:00">08:00</option>
+                    <option value="09:00">09:00</option>
+                    <option value="10:00">10:00</option>
+                    <option value="11:00">11:00</option>
+                    <option value="12:00">12:00</option>
+                    <option value="13:00">13:00</option>
+                    <option value="14:00">14:00</option>
+                    <option value="15:00">15:00</option>
+                    <option value="16:00">16:00</option>
+                    <option value="17:00">17:00</option>
+                    <option value="18:00">18:00</option>
+                    <option value="19:00">19:00</option>
+                    <option value="20:00">20:00</option>
+                    <option value="21:00">21:00</option>
+                    <option value="22:00">22:00</option>
+                </select>
+
+                <button type="submit">Buscar Turnos</button>
+            </form>
+        </section>
+
+        <section id="resultados" class="resultados">
+            <!-- Acá se van a mostrar los turnos encontrados -->
+        </section>
+    </main>
+
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="js/app.js"></script>
+<script src="js/footer.js"></script>
+
+</body>
+</html>

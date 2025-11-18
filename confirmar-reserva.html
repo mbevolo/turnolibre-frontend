@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmar reserva - TurnoLibre</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+    h2 {
+      color: #2c7be5;
+    }
+    .loader {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #2c7be5;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+      margin: 20px auto;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Confirmando tu reserva...</h2>
+    <div class="loader"></div>
+    <p id="mensaje">Por favor, esperá un momento.</p>
+  </div>
+
+<script>
+  const API_BASE_URL = window.API_BASE_URL || "https://turnolibre-backend.onrender.com";
+
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id');
+  const code = params.get('code');
+
+  async function confirmarReserva() {
+    try {
+      if (!id || !code) {
+        document.getElementById('mensaje').innerText = '❌ Enlace inválido o incompleto.';
+        return;
+      }
+
+      const response = await fetch(`${API_BASE_URL}/reservas/confirmar/${id}/${code}`);
+      const text = await response.text();
+
+      document.querySelector('.card').innerHTML = `
+        <h2>TurnoLibre</h2>
+        <p>${text}</p>
+      `;
+    } catch (error) {
+      document.getElementById('mensaje').innerText = '❌ Error al confirmar la reserva.';
+      console.error(error);
+    }
+  }
+
+  confirmarReserva();
+</script>
+
+  <script src="js/footer.js"></script>
+
+</body>
+</html>

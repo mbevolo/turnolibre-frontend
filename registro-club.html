@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Registro de Club - TurnoLibre</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    #map { height: 300px; border-radius: 8px; margin-top: 10px; }
+  </style>
+</head>
+<body class="bg-light">
+
+  <div class="container mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-7">
+        <div class="card shadow">
+          <div class="card-body">
+            <h3 class="text-center mb-4">Registro de Club</h3>
+
+            <form id="formRegistroClub">
+              
+              <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre del Club</label>
+                <input type="text" id="nombre" class="form-control" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Email</label>
+                <input type="email" id="email" class="form-control" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="password" class="form-label">Contraseña</label>
+                <input type="password" id="password" class="form-control"
+                 placeholder="••••••••"
+                 minlength="6"
+                 pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{6,}$"
+                  title="Debe tener al menos 6 caracteres, incluyendo una letra y un número"
+                 required>
+            </div>
+
+              <!-- Teléfono -->
+              <div class="mb-3">
+                <label for="telefono" class="form-label">Teléfono (WhatsApp)</label>
+                <div class="input-group">
+                  <span class="input-group-text">+549</span>
+                  <input
+                    type="tel"
+                    id="telefono"
+                    class="form-control"
+                    required
+                    inputmode="numeric"
+                    pattern="\d{8,12}"
+                    placeholder="Ej: 3534818982"
+                    title="Ingresá solo números, entre 8 y 12 dígitos."
+                  />
+                </div>
+                <small class="text-muted">Solo escribí tu número sin 0 ni 15 (ej: 3534818982).</small>
+              </div>
+
+              <!-- Dirección -->
+              <div class="row">
+                <div class="col-md-8 mb-3">
+                  <label for="calle" class="form-label">Calle</label>
+                  <input type="text" id="calle" class="form-control" placeholder="Ej: San Martín" required />
+                </div>
+                <div class="col-md-4 mb-3">
+                  <label for="numero" class="form-label">Número</label>
+                  <input type="number" id="numero" class="form-control" placeholder="Ej: 1200" required />
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-6 mb-3">
+                  <label for="localidad" class="form-label">Localidad</label>
+                  <select id="localidad" class="form-select" required disabled>
+                    <option value="">Seleccionar localidad</option>
+                  </select>
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="provincia" class="form-label">Provincia</label>
+                  <select id="provincia" class="form-select" required>
+                    <option value="">Seleccionar provincia</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Botones mapa -->
+              <div class="mb-3 text-center">
+                <button type="button" id="btnBuscarMapa" class="btn btn-outline-primary btn-sm me-2">🔍 Buscar en mapa</button>
+                <button type="button" id="btnUbicacion" class="btn btn-outline-secondary btn-sm">📍 Usar mi ubicación actual</button>
+              </div>
+
+              <!-- Mapa -->
+              <div id="map"></div>
+
+              <!-- Coordenadas -->
+              <div class="row mt-3">
+                <div class="col-md-6 mb-3">
+                  <label for="latitud" class="form-label">Latitud</label>
+                  <input type="text" id="latitud" class="form-control" required readonly />
+                </div>
+                <div class="col-md-6 mb-3">
+                  <label for="longitud" class="form-label">Longitud</label>
+                  <input type="text" id="longitud" class="form-control" required readonly />
+                </div>
+              </div>
+<div class="form-check mt-3">
+    <input class="form-check-input" type="checkbox" id="aceptoTerminosClub" required>
+    <label class="form-check-label" for="aceptoTerminosClub">
+        Acepto los 
+        <a href="terminos-clubes.html" target="_blank">Términos y Condiciones para Clubes</a> y la 
+        <a href="privacidad.html" target="_blank">Política de Privacidad</a>.
+    </label>
+</div>
+
+              <button type="submit" class="btn btn-primary w-100">Registrar Club</button>
+            </form>
+
+            <p class="text-center mt-3">
+              ¿Ya tienes una cuenta?
+              <a href="login-club.html">Iniciar sesión</a>
+            </p>
+
+            <div id="mensaje" class="mt-3 text-center"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+  const API_BASE_URL = "https://turnolibre-backend.onrender.com";
+  let map, marker, ubicacionesData;
+
+  // Inicializar mapa
+  function initMap() {
+    map = L.map("map").setView([-32.41, -63.25], 13);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(map);
+    marker = L.marker([-32.41, -63.25], { draggable: true }).addTo(map);
+    marker.on("dragend", () => {
+      const { lat, lng } = marker.getLatLng();
+      document.getElementById("latitud").value = lat.toFixed(6);
+      document.getElementById("longitud").value = lng.toFixed(6);
+    });
+  }
+  initMap();
+
+  // Cargar provincias/localidades
+  async function cargarUbicaciones() {
+    const res = await fetch(`${API_BASE_URL}/ubicaciones`);
+    ubicacionesData = await res.json();
+    const provinciaSelect = document.getElementById("provincia");
+    Object.keys(ubicacionesData).forEach((prov) => {
+      const opt = document.createElement("option");
+      opt.value = prov;
+      opt.textContent = prov;
+      provinciaSelect.appendChild(opt);
+    });
+
+    provinciaSelect.addEventListener("change", () => {
+      const provincia = provinciaSelect.value;
+      const localidadSelect = document.getElementById("localidad");
+      localidadSelect.innerHTML = '<option value="">Seleccionar localidad</option>';
+      localidadSelect.disabled = !provincia;
+      if (provincia && ubicacionesData[provincia]) {
+        ubicacionesData[provincia].forEach((loc) => {
+          const opt = document.createElement("option");
+          opt.value = loc;
+          opt.textContent = loc;
+          localidadSelect.appendChild(opt);
+        });
+      }
+    });
+  }
+  cargarUbicaciones();
+
+  // Buscar dirección manualmente
+  document.getElementById("btnBuscarMapa").addEventListener("click", async () => {
+    const calle = document.getElementById("calle").value.trim();
+    const numero = document.getElementById("numero").value.trim();
+    const localidad = document.getElementById("localidad").value.trim();
+    const provincia = document.getElementById("provincia").value.trim();
+
+    if (!calle || !numero || !localidad || !provincia) {
+      alert("Completá calle, número, localidad y provincia antes de buscar.");
+      return;
+    }
+
+    const query = encodeURIComponent(`${calle} ${numero}, ${localidad}, ${provincia}, Argentina`);
+    const res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`);
+    const data = await res.json();
+
+    if (data.length === 0) {
+      alert("No se encontró la dirección en el mapa.");
+      return;
+    }
+
+    const { lat, lon } = data[0];
+    map.setView([lat, lon], 16);
+    marker.setLatLng([lat, lon]);
+    document.getElementById("latitud").value = Number(lat).toFixed(6);
+    document.getElementById("longitud").value = Number(lon).toFixed(6);
+  });
+
+  // Usar ubicación actual
+  document.getElementById("btnUbicacion").addEventListener("click", () => {
+    if (!navigator.geolocation) {
+      alert("Tu navegador no soporta geolocalización.");
+      return;
+    }
+    navigator.geolocation.getCurrentPosition((pos) => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+      map.setView([lat, lon], 16);
+      marker.setLatLng([lat, lon]);
+      document.getElementById("latitud").value = lat.toFixed(6);
+      document.getElementById("longitud").value = lon.toFixed(6);
+    });
+  });
+
+  // Enviar formulario
+  document.getElementById("formRegistroClub").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    // Validar aceptación de términos legales
+    const checkboxTerminos = document.getElementById("aceptoTerminosClub");
+    if (!checkboxTerminos || !checkboxTerminos.checked) {
+        alert("Debes aceptar los Términos y Condiciones para Clubes y la Política de Privacidad.");
+        return;
+    }
+
+    const nombre = document.getElementById("nombre").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    const telInput = document.getElementById("telefono").value.trim().replace(/[^0-9]/g, "");
+    const calle = document.getElementById("calle").value.trim();
+    const numero = document.getElementById("numero").value.trim();
+    const provincia = document.getElementById("provincia").value.trim();
+    const localidad = document.getElementById("localidad").value.trim();
+
+    if (!provincia || !localidad) {
+      alert("Seleccioná provincia y localidad.");
+      return;
+    }
+
+    if (telInput.length < 8 || telInput.length > 12) {
+      alert("El teléfono debe tener entre 8 y 12 dígitos (sin 0 ni 15).");
+      return;
+    }
+
+    const { lat, lng } = marker.getLatLng();
+    const latitud = Number(lat.toFixed(6));
+    const longitud = Number(lng.toFixed(6));
+
+    if (Number.isNaN(latitud) || Number.isNaN(longitud)) {
+      alert("Ubicá el club en el mapa antes de continuar.");
+      return;
+    }
+
+    const telefono = "549" + telInput;
+    const direccion = `${calle} ${numero}, ${localidad}, ${provincia}`;
+    const body = { nombre, email, password, telefono, direccion, provincia, localidad, latitud, longitud };
+
+    console.log("📤 Enviando /registro-club:", body);
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/registro-club`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await res.json();
+
+      const mensajeDiv = document.getElementById("mensaje");
+
+      if (!res.ok) {
+        mensajeDiv.innerHTML = `<div class="alert alert-danger mt-2">${data.error || "Error al registrar el club"}</div>`;
+        return;
+      }
+
+      mensajeDiv.innerHTML = `<div class="alert alert-success mt-2">✅ ${data.mensaje}</div>`;
+      setTimeout(() => {
+        window.location.href = "login-club.html";
+      }, 2000);
+    } catch (err) {
+      console.error("❌ Error /registro-club:", err);
+      document.getElementById("mensaje").innerHTML =
+        `<div class="alert alert-danger mt-2">Error de conexión con el servidor.</div>`;
+    }
+  });
+  </script>
+  <script src="js/footer.js"></script>
+
+</body>
+</html>

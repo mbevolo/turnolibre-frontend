@@ -1,0 +1,248 @@
+:root{
+  --primary:#0d6efd;
+  --bg:#f7f7fb;
+  --card:#ffffff;
+  --text:#1f2937;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --success:#16a34a;
+  --danger:#dc2626;
+}
+
+*{ box-sizing:border-box; }
+
+html, body{
+  background:var(--bg);
+  color:var(--text);
+}
+
+a.btn, button.btn, .btn{
+  display:inline-block;
+  border-radius:10px;
+  padding:10px 14px;
+  border:1px solid transparent;
+  cursor:pointer;
+  text-decoration:none;
+}
+
+.btn-primary{
+  background:var(--primary);
+  color:#fff;
+  border-color:var(--primary);
+}
+
+.btn-outline{
+  background:#fff;
+  color:var(--primary);
+  border-color:var(--primary);
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  box-shadow:0 6px 16px rgba(0,0,0,.06);
+  padding:16px;
+}
+
+.input, select, .form-select{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border:1px solid var(--border) !important;
+  border-radius:8px;
+}
+
+.text-muted{ color:var(--muted); font-size:.9rem; }
+
+/* ====== ESTILOS GENERALES ====== */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+main {
+    padding: 20px;
+}
+
+h1, h2, h3 {
+    margin-bottom: 10px;
+    color: #343a40;
+}
+
+/* ====== SECCIONES ====== */
+section, .buscador, .resultados .turno {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+/* ====== FORMULARIOS ====== */
+input, select, button, .buscador input, .buscador select, .buscador button {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+button, .btn {
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 20px;
+}
+
+button:hover, .btn:hover {
+    background-color: #218838;
+}
+
+/* ====== BARRA USUARIO ====== */
+#barra-usuario {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #eee;
+}
+
+#logout {
+    background-color: #dc3545;
+    border: none;
+}
+
+#logout:hover {
+    background-color: #c82333;
+}
+
+/* ====== MAPA ====== */
+#map {
+    width: 100%;
+    height: 300px;
+    border: 2px solid #ced4da;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.leaflet-popup-content button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.leaflet-popup-content button:hover {
+    background-color: #0056b3;
+}
+
+/* ====== CALENDARIO Y AGENDA ====== */
+#calendar {
+    margin-top: 20px;
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.nav-tabs .nav-link {
+    color: #007bff;
+}
+
+/* ====== CARDS ====== */
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: scale(1.02);
+}
+
+.card-body h5 {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* ====== TABLA DE RESERVAS ====== */
+.table th, .table td {
+    vertical-align: middle;
+}
+
+#reservas-list tr:nth-child(even) {
+    background-color: #f1f3f5;
+}
+
+/* ====== MODALES ====== */
+.modal-content {
+    border-radius: 10px;
+}
+
+.modal-header {
+    background-color: #007bff;
+    color: #fff;
+    border-bottom: none;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.modal-footer {
+    border-top: none;
+}
+
+.close-button, .btn-close {
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+/* Aumentar la altura de cada franja horaria */
+.fc-timegrid-slot {
+    min-height: 50px !important;
+}
+
+/* Que los eventos se vean más claros, con padding */
+.fc-event {
+    font-size: 1rem;
+    padding: 6px 4px;
+    white-space: normal !important; /* Permite que el texto baje de línea */
+}
+.fc-event-title, .fc-event-title-container, .fc-event-main-frame {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;
+    word-break: break-word !important;
+    line-height: 1.2 !important;
+    font-size: 1em !important;
+  }
+  .fc-timegrid-slot {
+    height: 3.5em !important; /* Ajusta este valor según lo que necesites */
+    min-height: 3.5em !important;
+}
+.is-invalid {
+  border-color: #dc3545 !important;
+  box-shadow: 0 0 4px rgba(220,53,69,0.5);
+}
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 3px;
+}

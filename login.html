@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión - TurnoLibre</title>
+
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Definí la URL del backend ANTES de cargar auth.js -->
+  <script>
+    // En producción, cambiá al dominio real
+window.APP_BASE_URL = 'https://turnolibre-backend.onrender.com';
+
+  </script>
+
+  <script src="js/auth.js" defer></script>
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .card {
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .btn-success {
+      background-color: #28a745;
+      border-color: #28a745;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      padding: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-6 col-lg-5">
+        <div class="card p-4 shadow">
+          <h3 class="text-center mb-4">Iniciar sesión</h3>
+
+          <!-- Banner de verificación -->
+          <div id="verify-banner" style="display:none; padding:12px; margin-bottom:15px; border-radius:6px;"></div>
+
+          <!-- Formulario de login -->
+          <form id="form-login" novalidate>
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo electrónico</label>
+              <input type="email" id="email" class="form-control" placeholder="ejemplo@correo.com" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="password" class="form-label">Contraseña</label>
+              <input type="password" id="password" class="form-control" placeholder="••••••••" required>
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-success">Iniciar sesión</button>
+            </div>
+          </form>
+
+          <div class="text-center mt-3">
+            <a href="recuperar.html">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <div class="text-center mt-2">
+            ¿No tenés cuenta? <a href="registro.html">Registrate</a>
+          </div>
+
+          <!-- Bloque reenviar verificación -->
+          <div id="resend-block" class="text-center mt-4" style="display:none;">
+            <p class="mb-2">¿No recibiste el correo de verificación?</p>
+            <div class="input-group mb-2">
+              <input type="email" id="resend-email" class="form-control" placeholder="Tu email para reenviar verificación">
+              <button class="btn btn-outline-primary" id="btn-resend" type="button">Reenviar</button>
+            </div>
+            <small id="resend-msg" class="text-muted"></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script: Banner de estado de verificación -->
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const verified = params.get('verified');
+      const msg = params.get('msg');
+
+      if (!verified && !msg) return;
+
+      const banner = document.getElementById('verify-banner');
+      const ok = verified === '1';
+
+      banner.style.display = 'block';
+      banner.style.background = ok ? '#e6ffed' : '#ffecec';
+      banner.style.border = ok ? '1px solid #34c759' : '1px solid #ff3b30';
+      banner.style.color = ok ? '#034d1a' : '#5a0000';
+      banner.textContent = ok
+        ? '¡Listo! Tu email fue verificado. Ya podés iniciar sesión.'
+        : (decodeURIComponent(msg || '') || 'No se pudo verificar tu email.');
+
+      // Limpia la query
+      const url = new URL(location.href);
+      url.search = '';
+      window.history.replaceState({}, '', url);
+    })();
+  </script>
+<script src="js/footer.js"></script>
+
+</body>
+</html>
