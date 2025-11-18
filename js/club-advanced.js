@@ -348,13 +348,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else if (t.usuarioReservado) {
                 color = 'red'; // Reservado futuro
             }
-            return {
-                title: t.usuarioReservado ? `Reservado: ${t.usuarioReservado}` : `Libre`,
-                start: `${t.fecha}T${t.hora}`,
-                color: color,
-                id: t.realId,
-                extendedProps: t
-            };
+return {
+    title: t.usuarioReservado ? `Reservado: ${t.usuarioReservado}` : `Libre`,
+    start: `${t.fecha}T${t.hora}`,
+    color: color,
+    classNames: [`calendar-color-${color.replace('#','')}`],
+    id: t.realId,
+    extendedProps: { ...t, customColor: color }
+};
+
         });
 
         // Actualizá los eventos del calendario único
