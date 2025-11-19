@@ -795,7 +795,7 @@ console.log('📤 Enviando reserva:', {
 const res = await fetch('https://turnolibre-backend.onrender.com/reservar-turno', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
+body: JSON.stringify({
     deporte: turnoSeleccionado.deporte,
     fecha: turnoSeleccionado.fecha,
     hora: turnoSeleccionado.hora,
@@ -803,9 +803,11 @@ const res = await fetch('https://turnolibre-backend.onrender.com/reservar-turno'
     precio: turnoSeleccionado.precio,
     usuarioReservado: nombreCliente,
     emailReservado: emailCliente,
+    telefonoReservado: telefonoCliente,   // 👈 AGREGAR ESTO
     metodoPago: 'efectivo',
     canchaId: turnoSeleccionado.canchaId
-  })
+})
+
 });
 
 
