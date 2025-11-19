@@ -1,2 +1,2 @@
-window.API_BASE_URL = 'https://turnolibre-backend.onrender.com';
+window.API_BASE_URL = "http://192.168.1.106:3000";
 
