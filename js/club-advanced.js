@@ -882,9 +882,8 @@ function formatearTelefono(tel) {
 
 
       futuras.forEach(r => {
-        console.log("📦 RESERVA COMPLETA:", r);
-
-          const [anio, mes, dia] = r.fecha.includes('-')
+       
+        const [anio, mes, dia] = r.fecha.includes('-')
               ? r.fecha.split('-')
               : [r.fecha.split('/')[2], r.fecha.split('/')[1], r.fecha.split('/')[0]];
           const fechaFormateada = `${dia}/${mes}/${anio}`;
