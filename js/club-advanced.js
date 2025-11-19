@@ -365,14 +365,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    async function cargarAgendas() {
-        const agendasContainer = document.getElementById('agendas-container');
-        agendasContainer.innerHTML = `
-            <label for="select-cancha-agenda" class="form-label mt-2 mb-1">Seleccioná la cancha:</label>
-            <select id="select-cancha-agenda" class="form-select mb-3"></select>
-            <div id="calendar-unico"></div>
-        `;
-        const selectCancha = document.getElementById('select-cancha-agenda');
+async function cargarAgendas() {
+
+    // Selector arriba
+    const selectorContainer = document.getElementById("selector-cancha");
+    selectorContainer.innerHTML = `
+        <select id="select-cancha-agenda" class="form-select"></select>
+    `;
+
+    // Calendario ocupa todo el ancho
+    const agendasContainer = document.getElementById('agendas-container');
+    agendasContainer.innerHTML = `
+        <div id="calendar-unico"></div>
+    `;
+
+    const selectCancha = document.getElementById('select-cancha-agenda');
 
         // Trae todas las canchas y carga el select
         const resCanchas = await fetch(`https://turnolibre-backend.onrender.com/canchas/${clubEmail}`);
@@ -475,16 +482,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                                     // Obtener reserva con teléfono
                                     const resReserva = await fetch(`https://turnolibre-backend.onrender.com/reserva/${turno.realId}`);
                                     const reserva = await resReserva.json();
-                                    let telefonoOriginal = reserva.usuarioId?.telefono || '';
+                             
+                                    let telefonoOriginal =
+                                    reserva.usuarioId?.telefono ||
+                                    reserva.usuarioTelefono ||
+                                    reserva.telefonoReservado ||
+                                    '';
                                     let telefono = telefonoOriginal.replace(/[^0-9]/g, '');
-                                    // console.log('📞 Teléfono desde usuarioId:', telefono);
                                     if (!telefono) {
-                                            alert('El usuario no tiene un número válido en su perfil.');
-                                            return;
+                                        alert('El usuario no tiene un número válido en su perfil.');
+                                        return;
                                     }
-
                                     if (telefono.startsWith('0')) telefono = telefono.slice(1);
                                     if (!telefono.startsWith('549')) telefono = '549' + telefono;
+
                                     const nombreClub = clubData?.nombre || reserva.club;
                                     const [anio, mes, dia] = reserva.fecha.split('-');
                                     const fechaFormateada = `${dia}/${mes}/${anio}`;
@@ -496,17 +507,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                                         `💳 Link de pago:\n${data.pagoUrl}`;
                                     const mensaje = encodeURIComponent(mensajeTexto);
                                     const linkWhatsapp = `https://wa.me/${telefono}?text=${mensaje}`;
-                                    const popup = window.open('', '_blank', 'width=500,height=300');
-                                    popup.document.write(`
-                                        <html><head><title>Link de Pago</title></head>
-                                        <body style="font-family: Arial; padding: 20px;">
-                                            <h3>✅ Link de pago generado:</h3>
-                                            <p><a href="${data.pagoUrl}" target="_blank">${data.pagoUrl}</a></p>
-                                            <button onclick="navigator.clipboard.writeText('${data.pagoUrl}')">📋 Copiar enlace</button>
-                                            <br><br>
-                                            <a href="${linkWhatsapp}" target="_blank">📲 Enviar por WhatsApp</a>
-                                        </body></html>
-                                    `);
+                                    window.open(linkWhatsapp, '_blank');
+
                                 } catch (err) {
                                     alert('Error generando el link de pago.');
                                 }
@@ -879,11 +881,16 @@ const res = await fetch('https://turnolibre-backend.onrender.com/reservar-turno'
               <td>
                   ${r.usuarioId?.nombre || ''} ${r.usuarioId?.apellido || ''}<br>
                   📧 ${r.usuarioId?.email || r.emailReservado}<br>
-                  📱 <a href="https://wa.me/${formatearTelefono(r.usuarioId?.telefono)}" target="_blank" style="text-decoration: none;">
-                        ${r.usuarioId?.telefono || ''}
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-                             alt="WhatsApp" style="width: 18px; vertical-align: middle; margin-left: 4px;">
-                      </a>
+📱 <a href="https://wa.me/${formatearTelefono(
+        r.usuarioId?.telefono ||
+        r.usuarioTelefono ||
+        r.telefonoReservado
+    )}" target="_blank" style="text-decoration: none;">
+      ${r.usuarioId?.telefono || r.usuarioTelefono || r.telefonoReservado || ''}
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+           alt="WhatsApp" style="width: 18px; vertical-align: middle; margin-left: 4px;">
+    </a>
+
               </td>
               <td>${estadoPago}</td>
               <td>${botones}</td>
@@ -935,15 +942,22 @@ const res = await fetch('https://turnolibre-backend.onrender.com/reservar-turno'
                   }
                   const resReserva = await fetch(`https://turnolibre-backend.onrender.com/reserva/${id}`);
                   const reserva = await resReserva.json();
-                  let telefonoOriginal = reserva.usuarioId?.telefono || '';
-                  let telefono = telefonoOriginal.replace(/[^0-9]/g, '');
-                  // console.log('📞 Teléfono desde usuarioId:', telefono);
-                  if (!telefono) {
-                        alert('El usuario no tiene un número válido en su perfil.');
-                        return;
-                  }
-                  if (telefono.startsWith('0')) telefono = telefono.slice(1);
-                  if (!telefono.startsWith('549')) telefono = '549' + telefono;
+                  let telefonoOriginal =
+    reserva.usuarioId?.telefono ||
+    reserva.usuarioTelefono ||
+    reserva.telefonoReservado ||
+    '';
+
+let telefono = telefonoOriginal.replace(/[^0-9]/g, '');
+
+if (!telefono) {
+    alert('El usuario no tiene un número válido en su perfil.');
+    return;
+}
+
+if (telefono.startsWith('0')) telefono = telefono.slice(1);
+if (!telefono.startsWith('549')) telefono = '549' + telefono;
+
                   const nombreClub = clubData?.nombre || reserva.club;
                   const [anio, mes, dia] = reserva.fecha.includes('-') ? reserva.fecha.split('-') : [reserva.fecha.split('/')[2], reserva.fecha.split('/')[1], reserva.fecha.split('/')[0]];
                   const fechaFormateada = `${dia}/${mes}/${anio}`;
@@ -955,17 +969,8 @@ const res = await fetch('https://turnolibre-backend.onrender.com/reservar-turno'
                       `💳 Link de pago:\n${data.pagoUrl}`;
                   const mensaje = encodeURIComponent(mensajeTexto);
                   const linkWhatsapp = `https://wa.me/${telefono}?text=${mensaje}`;
-                  const popup = window.open('', '_blank', 'width=500,height=300');
-                  popup.document.write(`
-                      <html><head><title>Link de Pago</title></head>
-                      <body style="font-family: Arial; padding: 20px;">
-                          <h3>✅ Link de pago generado:</h3>
-                          <p><a href="${data.pagoUrl}" target="_blank">${data.pagoUrl}</a></p>
-                          <button onclick="navigator.clipboard.writeText('${data.pagoUrl}')">📋 Copiar enlace</button>
-                          <br><br>
-                          <a href="${linkWhatsapp}" target="_blank">📲 Enviar por WhatsApp</a>
-                      </body></html>
-                  `);
+                 window.open(linkWhatsapp, '_blank');
+
               } catch (err) {
                   alert('Error generando el link de pago.');
               }
