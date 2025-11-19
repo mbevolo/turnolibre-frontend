@@ -795,7 +795,7 @@ console.log('📤 Enviando reserva:', {
 const res = await fetch('https://turnolibre-backend.onrender.com/reservar-turno', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
-body: JSON.stringify({
+  body: JSON.stringify({
     deporte: turnoSeleccionado.deporte,
     fecha: turnoSeleccionado.fecha,
     hora: turnoSeleccionado.hora,
@@ -803,12 +803,9 @@ body: JSON.stringify({
     precio: turnoSeleccionado.precio,
     usuarioReservado: nombreCliente,
     emailReservado: emailCliente,
-    telefonoReservado: telefonoCliente,   // 👈 AGREGAR ESTO
     metodoPago: 'efectivo',
-    telefonoReservado: telefonoCliente,
     canchaId: turnoSeleccionado.canchaId
-})
-
+  })
 });
 
 
@@ -860,31 +857,16 @@ body: JSON.stringify({
           }
       });
 
-function formatearTelefono(tel) {
-    if (!tel) return "";
-
-    let numero = tel.replace(/[^0-9]/g, "");
-
-    // Si empieza con 54 y tiene más de 10 dígitos, seguramente es 54 + número local
-    if (numero.startsWith("54") && numero.length > 11) {
-        numero = numero.slice(2); // elimina el "54" sobrante
-    }
-
-    // Eliminar 0 inicial en caso de que lo tenga
-    if (numero.startsWith("0")) numero = numero.slice(1);
-
-    // Asegurar formato WhatsApp: 549 + número local
-    if (!numero.startsWith("549")) {
-        numero = "549" + numero;
-    }
-
-    return numero;
-}
-
+      function formatearTelefono(tel) {
+        if (!tel) return '';
+        let numero = tel.replace(/[^0-9]/g, '');
+        if (numero.startsWith('0')) numero = numero.slice(1);
+        if (!numero.startsWith('549')) numero = '549' + numero;
+        return numero;
+      }
 
       futuras.forEach(r => {
-       
-        const [anio, mes, dia] = r.fecha.includes('-')
+          const [anio, mes, dia] = r.fecha.includes('-')
               ? r.fecha.split('-')
               : [r.fecha.split('/')[2], r.fecha.split('/')[1], r.fecha.split('/')[0]];
           const fechaFormateada = `${dia}/${mes}/${anio}`;
@@ -904,13 +886,8 @@ function formatearTelefono(tel) {
               <td>
                   ${r.usuarioId?.nombre || ''} ${r.usuarioId?.apellido || ''}<br>
                   📧 ${r.usuarioId?.email || r.emailReservado}<br>
-                  📱 <a href="https://wa.me/${formatearTelefono(
-        r.usuarioTelefono ||
-        r.telefonoReservado ||
-        r.usuarioId?.telefono
-    )}" target="_blank" style="text-decoration: none;">
-      ${r.usuarioTelefono || r.telefonoReservado || r.usuarioId?.telefono || ''}
-
+                  📱 <a href="https://wa.me/${formatearTelefono(r.usuarioId?.telefono)}" target="_blank" style="text-decoration: none;">
+                        ${r.usuarioId?.telefono || ''}
                         <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
                              alt="WhatsApp" style="width: 18px; vertical-align: middle; margin-left: 4px;">
                       </a>
