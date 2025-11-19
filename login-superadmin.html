@@ -21,7 +21,7 @@
       const alerta = document.getElementById('alerta');
       alerta.innerHTML = '';
 
-      const res = await fetch('http://192.168.1.106:3000/superadmin/login', {
+      const res = await fetch('https://turnolibre-backend.onrender.com/superadmin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

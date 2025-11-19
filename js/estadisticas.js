@@ -6,7 +6,7 @@ let chartHoras = null;
 let chartOcupacion = null;
 
 (function () {
-  const API = (window.API_BASE_URL || "http://192.168.1.106:3000").replace(/\/$/, "");
+  const API = (window.API_BASE_URL || "https://turnolibre-backend.onrender.com").replace(/\/$/, "");
 
   document.addEventListener("DOMContentLoaded", init);
 
