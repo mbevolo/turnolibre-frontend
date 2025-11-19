@@ -805,6 +805,7 @@ body: JSON.stringify({
     emailReservado: emailCliente,
     telefonoReservado: telefonoCliente,   // 👈 AGREGAR ESTO
     metodoPago: 'efectivo',
+    telefonoReservado: telefonoCliente,
     canchaId: turnoSeleccionado.canchaId
 })
 
