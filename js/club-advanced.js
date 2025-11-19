@@ -507,17 +507,8 @@ async function cargarAgendas() {
                                         `💳 Link de pago:\n${data.pagoUrl}`;
                                     const mensaje = encodeURIComponent(mensajeTexto);
                                     const linkWhatsapp = `https://wa.me/${telefono}?text=${mensaje}`;
-                                    const popup = window.open('', '_blank', 'width=500,height=300');
-                                    popup.document.write(`
-                                        <html><head><title>Link de Pago</title></head>
-                                        <body style="font-family: Arial; padding: 20px;">
-                                            <h3>✅ Link de pago generado:</h3>
-                                            <p><a href="${data.pagoUrl}" target="_blank">${data.pagoUrl}</a></p>
-                                            <button onclick="navigator.clipboard.writeText('${data.pagoUrl}')">📋 Copiar enlace</button>
-                                            <br><br>
-                                            <a href="${linkWhatsapp}" target="_blank">📲 Enviar por WhatsApp</a>
-                                        </body></html>
-                                    `);
+                                    window.open(linkWhatsapp, '_blank');
+
                                 } catch (err) {
                                     alert('Error generando el link de pago.');
                                 }
@@ -973,17 +964,8 @@ if (!telefono.startsWith('549')) telefono = '549' + telefono;
                       `💳 Link de pago:\n${data.pagoUrl}`;
                   const mensaje = encodeURIComponent(mensajeTexto);
                   const linkWhatsapp = `https://wa.me/${telefono}?text=${mensaje}`;
-                  const popup = window.open('', '_blank', 'width=500,height=300');
-                  popup.document.write(`
-                      <html><head><title>Link de Pago</title></head>
-                      <body style="font-family: Arial; padding: 20px;">
-                          <h3>✅ Link de pago generado:</h3>
-                          <p><a href="${data.pagoUrl}" target="_blank">${data.pagoUrl}</a></p>
-                          <button onclick="navigator.clipboard.writeText('${data.pagoUrl}')">📋 Copiar enlace</button>
-                          <br><br>
-                          <a href="${linkWhatsapp}" target="_blank">📲 Enviar por WhatsApp</a>
-                      </body></html>
-                  `);
+                 window.open(linkWhatsapp, '_blank');
+
               } catch (err) {
                   alert('Error generando el link de pago.');
               }
