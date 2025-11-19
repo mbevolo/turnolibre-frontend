@@ -881,11 +881,16 @@ const res = await fetch('https://turnolibre-backend.onrender.com/reservar-turno'
               <td>
                   ${r.usuarioId?.nombre || ''} ${r.usuarioId?.apellido || ''}<br>
                   📧 ${r.usuarioId?.email || r.emailReservado}<br>
-                  📱 <a href="https://wa.me/${formatearTelefono(r.usuarioId?.telefono)}" target="_blank" style="text-decoration: none;">
-                        ${r.usuarioId?.telefono || ''}
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-                             alt="WhatsApp" style="width: 18px; vertical-align: middle; margin-left: 4px;">
-                      </a>
+📱 <a href="https://wa.me/${formatearTelefono(
+        r.usuarioId?.telefono ||
+        r.usuarioTelefono ||
+        r.telefonoReservado
+    )}" target="_blank" style="text-decoration: none;">
+      ${r.usuarioId?.telefono || r.usuarioTelefono || r.telefonoReservado || ''}
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+           alt="WhatsApp" style="width: 18px; vertical-align: middle; margin-left: 4px;">
+    </a>
+
               </td>
               <td>${estadoPago}</td>
               <td>${botones}</td>
