@@ -859,13 +859,27 @@ body: JSON.stringify({
           }
       });
 
-      function formatearTelefono(tel) {
-        if (!tel) return '';
-        let numero = tel.replace(/[^0-9]/g, '');
-        if (numero.startsWith('0')) numero = numero.slice(1);
-        if (!numero.startsWith('549')) numero = '549' + numero;
-        return numero;
-      }
+function formatearTelefono(tel) {
+    if (!tel) return "";
+
+    let numero = tel.replace(/[^0-9]/g, "");
+
+    // Si empieza con 54 y tiene más de 10 dígitos, seguramente es 54 + número local
+    if (numero.startsWith("54") && numero.length > 11) {
+        numero = numero.slice(2); // elimina el "54" sobrante
+    }
+
+    // Eliminar 0 inicial en caso de que lo tenga
+    if (numero.startsWith("0")) numero = numero.slice(1);
+
+    // Asegurar formato WhatsApp: 549 + número local
+    if (!numero.startsWith("549")) {
+        numero = "549" + numero;
+    }
+
+    return numero;
+}
+
 
       futuras.forEach(r => {
         console.log("📦 RESERVA COMPLETA:", r);
